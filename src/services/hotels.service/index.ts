@@ -7,7 +7,7 @@ import ticketsRepository from '../../repositories/tickets-repository';
 async function getHotels(userId: number) {
   // se o usuário:
   // Não existe (inscrição, ticket ou hotel): 404 (not found)
-  const enrollment = await enrollmentRepository.findById(userId);
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) throw notFoundError();
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
@@ -16,8 +16,10 @@ async function getHotels(userId: number) {
   const checkHotels = await hotelsRepository.getHotels();
   if (checkHotels.length === 0) throw notFoundError();
 
+
   // Ticket não foi pago, é remoto ou não inclui hotel: 402 (payment required)
   const ticketSituation = await ticketsRepository.findTickeWithTypeById(ticket.id);
+  console.log(ticketSituation)
   if (
     ticket.status !== 'PAID' ||
     ticketSituation.TicketType.includesHotel === false ||
@@ -36,12 +38,17 @@ async function getHotelsById(userId: number, hotelId: number) {
   // Não existe (inscrição, ticket ou hotel): 404 (not found)
   const enrollment = await enrollmentRepository.findById(userId);
   if (!enrollment) throw notFoundError();
+  console.log(enrollment)
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket) throw notFoundError();
+  console.log(ticket)
+
 
   const checkHotels = await hotelsRepository.getHotels();
   if (checkHotels.length === 0) throw notFoundError();
+  console.log(checkHotels)
+
 
   // Ticket não foi pago, é remoto ou não inclui hotel: 402 (payment required)
   const ticketSituation = await ticketsRepository.findTickeWithTypeById(ticket.id);
