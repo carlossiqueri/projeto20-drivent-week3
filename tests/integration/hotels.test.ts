@@ -212,8 +212,7 @@ describe('GET /hotels/:hotelId', () => {
       const result = await server.get(`/hotels/${testHotel.id}`).set('Authorization', `Bearer ${testToken}`);
 
       expect(result.status).toBe(httpStatus.OK);
-    //   console.log(testHotel)
-    // console.log(testRoom)
+
       expect(result.body).toEqual(
         expect.objectContaining({
             id: testHotel.id,
